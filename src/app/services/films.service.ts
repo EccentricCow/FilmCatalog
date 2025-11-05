@@ -24,7 +24,7 @@ export class FilmsService {
   public getFilms(page?: number): Observable<FilmsResponseType> {
     return this._http.get<FilmsResponseType>(environment.tmdbApiUrl + '/movie/popular', {
       headers: this._headers,
-      params: { page: (page || 1).toString() },
+      params: { page: (page || 1).toString(), language: 'ru-RU' },
     });
   }
 }

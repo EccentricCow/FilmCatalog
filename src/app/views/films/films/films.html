@@ -1,6 +1,10 @@
 <main class="films">
+  <header class="films__header">
+    <input [formControl]="_searchedField" class="films__search" type="text" placeholder="Поиск..." name="search"/>
+  </header>
+
   <div class="container">
-    <h1 class="films__header title">Каталог фильмов</h1>
+    <h1 class="films__title title">Каталог фильмов</h1>
     @if (_isLoading()) {
       <div class="films__loader">
         <loader></loader>
@@ -15,7 +19,7 @@
         </div>
 
         <div class="films__pagination">
-          <pagination [allPagesCount]="_filmsPages().total" [currentPage]="_filmsPages().current" (pageChange)="_loadPage($event)"></pagination>
+          <pagination [allPagesCount]="_filmsPages().total" [currentPage]="_filmsPages().current" (pageChange)="_loadNewPage($event)"></pagination>
         </div>
       }
   </div>

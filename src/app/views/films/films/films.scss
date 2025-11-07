@@ -1,7 +1,25 @@
 .films {
+  min-height: 100vh;
+  background-color: #263038;
   padding-bottom: 50px;
 
   .films__header {
+    padding: 40px 20px;
+    display: flex;
+    justify-content: flex-end;
+
+    .films__search {
+      width: 400px;
+      box-sizing: border-box;
+      padding: 8px;
+      font-size: 24px;
+      border: 2px solid ;
+      border-radius: 8px;
+    }
+  }
+
+
+  .films__title {
     margin-bottom: 80px;
   }
 

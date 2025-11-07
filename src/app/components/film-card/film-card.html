@@ -1,0 +1,10 @@
+<div class="film-card" (mouseenter)="_onMouseEnter()" (mouseleave)="_onMouseLeave()">
+  @if (film()) {
+  <div class="film-card__poster">
+    <img [src]="_posterPath()" alt="{{film()?.title}}-poster" loading="lazy"/>
+  </div>
+    @if (_isPopoverVisible()) {
+      <film-popover [film]="film()" [position]="popoverPosition()"></film-popover>
+    }
+  }
+</div>

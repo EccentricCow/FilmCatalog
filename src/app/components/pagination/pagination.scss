@@ -1,0 +1,41 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  .pagination__num {
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    line-height: 1;
+
+    &.active {
+      font-size: 30px;
+    }
+  }
+
+  .pagination__arrow {
+    background-color: unset;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: start;
+  }
+
+  .pagination__action {
+    transition: transform 0.25s;
+
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:hover:not(.active):not([disabled]) {
+      transform: scale(1.3);
+    }
+
+    &.arrow_next:hover:not(.active):not([disabled]) {
+      transform: rotate(180deg) scale(1.3);
+    }
+  }
+}

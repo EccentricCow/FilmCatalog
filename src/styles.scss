@@ -38,3 +38,7 @@ body {
 input:focus-visible {
   outline: unset;
 }
+
+.arrow_next {
+  transform: rotate(180deg);
+}

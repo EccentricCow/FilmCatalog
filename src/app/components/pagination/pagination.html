@@ -1,0 +1,31 @@
+@if (allPagesCount() && currentPage()) {
+  <div class="pagination">
+
+    <button class="pagination__arrow pagination__action" [disabled]="currentPage() === 1" (click)="onClick(currentPage()! - 1)">
+      <img [src]="'/arrow.svg'" alt="prev" />
+    </button>
+
+    @if (_paginationArray().leftBack) {
+        <span class="pagination__num pagination__action" (click)="onClick(1)">1</span>
+        <span class="pagination__num pagination__action" (click)="onClick(_math.max(currentPage()! - 5, 3))">...</span>
+    }
+
+    @for (num of _paginationArray().nums; track num) {
+      <span
+        class="pagination__num pagination__action" [class.active]="num === currentPage()"
+        (click)="onClick(num)">
+        {{ num }}
+      </span>
+    }
+
+    @if (_paginationArray().rightForward) {
+        <span class="pagination__num pagination__action" (click)="onClick(_math.min(currentPage()! + 5, allPagesCount()! - 2))">...</span>
+        <span class="pagination__num pagination__action" (click)="onClick(allPagesCount()!)">{{ allPagesCount() }}</span>
+    }
+
+    <button class="pagination__arrow arrow_next pagination__action" [disabled]="currentPage() === allPagesCount()" (click)="onClick(currentPage()! + 1)">
+      <img [src]="'/arrow.svg'" alt="next" />
+    </button>
+
+  </div>
+}

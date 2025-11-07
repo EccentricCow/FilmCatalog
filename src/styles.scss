@@ -42,3 +42,9 @@ input:focus-visible {
 .arrow_next {
   transform: rotate(180deg);
 }
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 36px;
+  }
+}

@@ -1,31 +1,46 @@
 @if (allPagesCount() && currentPage()) {
   <div class="pagination">
+    <div class="pagination__inner">
+      <button class="pagination__arrow pagination__action" [disabled]="currentPage() === 1" (click)="onClick(currentPage()! - 1)">
+        <img [src]="'/arrow.svg'" alt="prev" />
+      </button>
 
-    <button class="pagination__arrow pagination__action" [disabled]="currentPage() === 1" (click)="onClick(currentPage()! - 1)">
-      <img [src]="'/arrow.svg'" alt="prev" />
-    </button>
+      @if (_paginationArray().leftBack) {
+        <div class="pagination__side">
+          <span class="pagination__num pagination__action" (click)="onClick(1)">1</span>
+          <span class="pagination__num pagination__action" (click)="onClick(_math.max(currentPage()! - 5, 3))">...</span>
+        </div>
 
-    @if (_paginationArray().leftBack) {
-        <span class="pagination__num pagination__action" (click)="onClick(1)">1</span>
-        <span class="pagination__num pagination__action" (click)="onClick(_math.max(currentPage()! - 5, 3))">...</span>
-    }
+      }
 
-    @for (num of _paginationArray().nums; track num) {
-      <span
-        class="pagination__num pagination__action" [class.active]="num === currentPage()"
-        (click)="onClick(num)">
+      @for (num of _paginationArray().nums; track num) {
+        <span
+          class="pagination__num pagination__action" [class.active]="num === currentPage()"
+          (click)="onClick(num)">
         {{ num }}
       </span>
-    }
+      }
 
-    @if (_paginationArray().rightForward) {
-        <span class="pagination__num pagination__action" (click)="onClick(_math.min(currentPage()! + 5, allPagesCount()! - 2))">...</span>
-        <span class="pagination__num pagination__action" (click)="onClick(allPagesCount()!)">{{ allPagesCount() }}</span>
-    }
+      @if (_paginationArray().rightForward) {
+        <div class="pagination__side">
+          <span class="pagination__num pagination__action" (click)="onClick(_math.min(currentPage()! + 5, allPagesCount()! - 2))">...</span>
+          <span class="pagination__num pagination__action" (click)="onClick(allPagesCount()!)">{{ allPagesCount() }}</span>
+        </div>
+      }
 
-    <button class="pagination__arrow arrow_next pagination__action" [disabled]="currentPage() === allPagesCount()" (click)="onClick(currentPage()! + 1)">
-      <img [src]="'/arrow.svg'" alt="next" />
-    </button>
+      <button class="pagination__arrow  pagination__action" [disabled]="currentPage() === allPagesCount()" (click)="onClick(currentPage()! + 1)">
+        <img class="arrow_next" [src]="'/arrow.svg'" alt="next" />
+      </button>
+    </div>
+
+    <div class="pagination__extra">
+      <button class="pagination__arrow pagination__action" [disabled]="currentPage() === 1" (click)="onClick(1)">
+        <img [src]="'/arrow.svg'" alt="next" />
+      </button>
+      <button class="pagination__arrow  pagination__action" [disabled]="currentPage() === allPagesCount()" (click)="onClick(allPagesCount())">
+        <img class="arrow_next" [src]="'/arrow.svg'" alt="next" />
+      </button>
+    </div>
 
   </div>
 }

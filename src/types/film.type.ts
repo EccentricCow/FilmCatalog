@@ -1,13 +1,4 @@
-import {Genre} from '../film.type';
-
-export type FilmsResponseType = {
-  page: number;
-  results: FilmResponseType[];
-  total_pages: number;
-  total_results: number;
-};
-
-export type FilmResponseType = {
+export type FilmType = {
   adult: boolean;
   backdrop_path: string;
   genre_ids: Genre['id'][];
@@ -22,8 +13,10 @@ export type FilmResponseType = {
   video: boolean;
   vote_average: number;
   vote_count: number;
+  genres?: Genre['name'][];
 };
 
-export type GenresResponseType = {
-  genres: Genre[];
-}
+export type Genre = {
+  id: string;
+  name: string;
+};

@@ -1,4 +1,4 @@
-import { Component, computed, input, output } from '@angular/core';
+import {Component, computed, input, output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { getPaginationArray } from '../../shared/utils/pagination-array.util';
 
@@ -12,6 +12,7 @@ import { getPaginationArray } from '../../shared/utils/pagination-array.util';
 export class PaginationComponent {
   public allPagesCount = input.required<number>();
   public currentPage = input.required<number>();
+  public totalResults = input.required<number>();
 
   protected readonly _math = Math;
 

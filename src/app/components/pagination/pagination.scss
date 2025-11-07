@@ -53,6 +53,11 @@
   .pagination__extra {
     display: none;
   }
+
+  .pagination__no-results {
+    font-size: 22px;
+    color: white
+  }
 }
 
 @media (max-width: 768px) {

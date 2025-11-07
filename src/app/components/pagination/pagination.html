@@ -1,5 +1,5 @@
-@if (allPagesCount() && currentPage()) {
 <div class="pagination">
+  @if (totalResults() > 0) {
   <div class="pagination__inner">
     <button
       class="pagination__arrow pagination__action"
@@ -65,5 +65,8 @@
       <img class="arrow_next" [src]="'/arrow.svg'" alt="next" />
     </button>
   </div>
+  } @else {
+    <div class="pagination__no-results">Ничего не нашлось :(</div>
+  }
 </div>
-}
+

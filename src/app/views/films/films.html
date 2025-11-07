@@ -28,6 +28,7 @@
       <pagination
         [allPagesCount]="_filmsPages().total"
         [currentPage]="_filmsPages().current"
+        [totalResults]="_filmsPages().totalResults"
         (pageChange)="_loadNewPage($event)"
       ></pagination>
     </div>

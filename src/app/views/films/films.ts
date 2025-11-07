@@ -23,10 +23,11 @@ export class Films implements OnInit {
   protected _isLoading = signal<boolean>(false);
   protected _isError = signal<string>('');
   protected _films = signal<FilmsResponseType>({} as FilmsResponseType);
-  protected readonly _filmsPages = computed<{ total: number; current: number }>(
-    (): { total: number; current: number } => ({
+  protected readonly _filmsPages = computed<{ total: number; current: number, totalResults: number }>(
+    (): { total: number; current: number, totalResults: number  } => ({
       total: this._films().total_pages,
       current: this._films().page,
+      totalResults: this._films().total_results
     })
   );
   protected _genres = signal<Genre[]>([]);

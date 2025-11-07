@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  API_BASE_URL: 'https://api.themoviedb.org/3',
+  tmdbApiUrl: 'https://api.themoviedb.org/3',
+  tmdbApiPosterBaseUrl: 'https://image.tmdb.org/t/p/w500',
 };

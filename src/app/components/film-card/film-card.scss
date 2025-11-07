@@ -7,7 +7,7 @@
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.3s ease, box-shadow 0.2s ease;
     aspect-ratio: 2 / 3;
 
     img {
@@ -26,5 +26,57 @@
 
   &:hover .film-card__poster img {
     filter: brightness(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .film-card {
+    .film-card__inner {
+      position: relative;
+      overflow: hidden;
+
+      .film-card__poster {
+        position: relative;
+        border-radius: 12px;
+
+        img {
+          filter: unset;
+          transition: unset;
+        }
+      }
+
+      &:hover .film-card__poster {
+        transform: unset;
+        box-shadow: unset;
+      }
+
+      &:hover .film-card__poster img {
+        filter: unset;
+      }
+
+      .film-card__popover {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+        transition: transform 0.3s ease;
+      }
+    }
+
+    &.slided {
+      .film-card__inner {
+        .film-card__poster {
+          transform: translateX(100%);
+        }
+
+        .film-card__popover {
+          transform: translateX(100%);
+          pointer-events: unset;
+        }
+      }
+    }
   }
 }

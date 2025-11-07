@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject, Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { FilmsResponseType } from '../../types/responses/films-response.type';
+import {FilmsResponseType, GenresResponseType} from '../../types/responses/films-response.type';
 import { isPlatformServer } from '@angular/common';
 
 @Injectable({
@@ -25,6 +25,13 @@ export class FilmsService {
     return this._http.get<FilmsResponseType>(environment.tmdbApiUrl + '/movie/popular', {
       headers: this._headers,
       params: { page: (page || 1).toString(), language: 'ru-RU' },
+    });
+  }
+
+  public getGenres(): Observable<GenresResponseType> {
+    return this._http.get<GenresResponseType>(environment.tmdbApiUrl + '/genre/movie/list', {
+      headers: this._headers,
+      params: { language: 'ru-RU' },
     });
   }
 }

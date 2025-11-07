@@ -1,0 +1,89 @@
+.film-card__popover {
+  position: absolute;
+  z-index: 10;
+  top: 5%;
+  right: -98%;
+  width: 100%;
+  padding: 15px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  //opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease-in-out;
+
+  &.left {
+    right: auto;
+    left: -98%;
+  }
+
+  //&.visible {
+  //  opacity: 1;
+  //  transform: translateY(0);
+  //  pointer-events: auto;
+  //}
+
+  .film-card__popover-title {
+    color: #263038;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .film-card__popover-inner {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    .film-card__popover-img {
+
+      border-radius: 12px;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .film-card__popover-info {
+      padding: 8px 0;
+    }
+  }
+
+  .film-card__popover-genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    align-items: center;
+    margin-bottom: 10px;
+
+    .film-card__popover-genre {
+      color: white;
+      padding: 2px 4px;
+      background-color: rgba(38, 48, 56, 0.8);
+      border-radius: 4px;
+    }
+  }
+
+  .film-card__popover-extra {
+    display: flex;
+    justify-content: space-between;
+
+    .film-card__popover-year {
+      opacity: 0.6;
+    }
+
+    .film-card__popover-vote {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 18px;
+      color: white;
+      width: 35px;
+      height: 35px;
+      display: grid;
+      place-items: center;
+      border-radius: 4px;
+    }
+  }
+}

@@ -5,11 +5,11 @@ import {
   inject,
   input, PLATFORM_ID, signal,
 } from '@angular/core';
-import { FilmResponseType } from '../../../types/responses/films-response.type';
 import { environment } from '../../../environments/environment';
 import {FilmPopoverService} from '../../services/film-popover.service';
 import {FilmPopover} from '../film-popover/film-popover';
 import {isPlatformServer} from '@angular/common';
+import {FilmType} from '../../../types/film.type';
 
 @Component({
   selector: 'film-card',
@@ -20,11 +20,11 @@ import {isPlatformServer} from '@angular/common';
   styleUrl: './film-card.scss',
 })
 export class FilmCard implements AfterViewInit {
-  public film = input<FilmResponseType>();
+  public film = input.required<FilmType>();
 
   protected readonly _posterPath = computed((): string =>
-    this.film()?.poster_path
-      ? environment.tmdbApiPosterBaseUrl + this.film()?.poster_path
+    this.film().poster_path
+      ? environment.tmdbApiPosterBaseUrl + this.film().poster_path
       : '/no-movie.png'
   );
 
@@ -34,7 +34,7 @@ export class FilmCard implements AfterViewInit {
 
   popoverPosition = signal<'left' | 'right'>('right');
   protected _isPopoverVisible = computed<boolean>((): boolean => {
-    return this._filmPopoverService.activeFilm() === this.film()?.id;
+    return this._filmPopoverService.activeFilm() === this.film().id;
   });
 
   private readonly _platformId = inject(PLATFORM_ID);
@@ -47,7 +47,7 @@ export class FilmCard implements AfterViewInit {
   }
 
   protected _onMouseEnter(): void {
-    this._filmPopoverService.setHoveredFilm(this.film()?.id ?? null)
+    this._filmPopoverService.setHoveredFilm(this.film().id)
   }
 
   protected _onMouseLeave(): void {

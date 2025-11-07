@@ -1,4 +1,5 @@
 <main class="films">
+  @if (!_isError()) {
   <header class="films__header">
     <input
       [formControl]="_searchedField"
@@ -34,4 +35,8 @@
     </div>
     }
   </div>
+  } @else {
+    <div class="films__error">Упс, что-то пошло не так :(</div>
+    <div class="films__error">{{_isError()}}</div>
+  }
 </main>

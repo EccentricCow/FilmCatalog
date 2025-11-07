@@ -13,27 +13,9 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
-
-/**
  * Serve static files from /browser
  */
-app.use(
-  express.static(browserDistFolder, {
-    maxAge: '1y',
-    index: false,
-    redirect: false,
-  })
-);
+app.get('*.*', express.static(browserDistFolder, { maxAge: '1y', index: false, redirect: false }));
 
 /**
  * Handle all other requests by rendering the Angular application.

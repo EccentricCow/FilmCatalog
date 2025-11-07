@@ -1,1 +1,19 @@
-<p>films works!</p>
+<main class="films">
+  <div class="container">
+    <h1 class="films__header title">Каталог фильмов</h1>
+
+    <div class="films__list">
+      @if (_isLoading()) {
+        <div class="films__loader">
+          <loader></loader>
+        </div>
+      } @else {
+        @for (film of _filmsWithGenres(); track film.id) {
+          <div class="films__item">
+            <film-card [film]="film"></film-card>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</main>

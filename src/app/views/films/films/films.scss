@@ -1,0 +1,54 @@
+.films {
+  //.film__header {
+  //    padding: 40px 20px;
+  //    display: flex;
+  //    justify-content: flex-end;
+  //
+  //    .header__search {
+  //      width: 400px;
+  //      box-sizing: border-box;
+  //      padding: 8px;
+  //      font-size: 24px;
+  //      border: 2px solid ;
+  //      border-radius: 8px;
+  //  }
+  //}
+
+  .films__header {
+    margin-bottom: 80px;
+  }
+
+  .films__loader {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background-color: #263038;
+  }
+
+  .films__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .films__list {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  .film-card__title {
+    color: white;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .films__list {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}

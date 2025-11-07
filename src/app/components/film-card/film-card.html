@@ -1,15 +1,24 @@
-<div class="film-card" (mouseenter)="_onMouseEnter()" (mouseleave)="_onMouseLeave()" (click)="_onClick()"
-[class.slided]="_isPopoverVisible()">
+<div
+  class="film-card"
+  (mouseenter)="_onMouseEnter()"
+  (mouseleave)="_onMouseLeave()"
+  (click)="_onClick()"
+  [class.slided]="_isPopoverVisible()"
+>
   @if (film()) {
-    <div class="film-card__inner">
-      <div class="film-card__poster">
-        <img [src]="_posterPath()" alt="{{film().title}}-poster" loading="lazy"/>
-      </div>
-      <div class="film-card__popover">
-        @if (_isPopoverVisible()) {
-          <film-popover [film]="film()" [position]="_popoverPosition()" [animate.enter]="_enterClass()"></film-popover>
-        }
-      </div>
+  <div class="film-card__inner">
+    <div class="film-card__poster">
+      <img [src]="_posterPath()" alt="{{ film().title }}-poster" loading="lazy" />
     </div>
+    <div class="film-card__popover">
+      @if (_isPopoverVisible()) {
+      <film-popover
+        [film]="film()"
+        [position]="_popoverPosition()"
+        [animate.enter]="_enterClass()"
+      ></film-popover>
+      }
+    </div>
+  </div>
   }
 </div>

@@ -1,21 +1,23 @@
 import {
   AfterViewInit,
   Component,
-  computed, ElementRef, HostListener,
+  computed,
+  ElementRef,
+  HostListener,
   inject,
-  input, PLATFORM_ID, signal,
+  input,
+  PLATFORM_ID,
+  signal,
 } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import {FilmPopoverService} from '../../services/film-popover.service';
-import {FilmPopover} from '../film-popover/film-popover';
-import {isPlatformServer} from '@angular/common';
-import {FilmType} from '../../../types/film.type';
+import { FilmPopoverService } from '../../services/film-popover.service';
+import { FilmPopover } from '../film-popover/film-popover';
+import { isPlatformServer } from '@angular/common';
+import { FilmType } from '../../../types/film.type';
 
 @Component({
   selector: 'film-card',
-  imports: [
-    FilmPopover
-  ],
+  imports: [FilmPopover],
   templateUrl: './film-card.html',
   styleUrl: './film-card.scss',
 })
@@ -40,13 +42,14 @@ export class FilmCard implements AfterViewInit {
   }
 
   protected readonly _filmPopoverService = inject(FilmPopoverService);
-  constructor(private el: ElementRef) {  }
+  constructor(private el: ElementRef) {}
   protected readonly isDesktop = signal(true);
 
-  popoverPosition = signal<'left' | 'right'>('right');
-  protected _isPopoverVisible = computed<boolean>((): boolean => {
+  protected _popoverPosition = signal<'left' | 'right'>('right');
+  protected readonly _isPopoverVisible = computed<boolean>((): boolean => {
     return this._filmPopoverService.activeFilm() === this.film().id;
   });
+  protected _enterClass = signal('enter-animation');
 
   private readonly _platformId = inject(PLATFORM_ID);
   public ngAfterViewInit(): void {
@@ -54,7 +57,7 @@ export class FilmCard implements AfterViewInit {
       const mediaQuery = window.matchMedia('(min-width: 769px)');
       this.isDesktop.set(mediaQuery.matches);
 
-      mediaQuery.addEventListener('change', e => {
+      mediaQuery.addEventListener('change', (e) => {
         this.isDesktop.set(e.matches);
       });
 
@@ -62,8 +65,8 @@ export class FilmCard implements AfterViewInit {
         const cardRect = (this.el.nativeElement as HTMLDivElement).getBoundingClientRect();
         const screenWidth = window.innerWidth;
         cardRect.right + cardRect.width + 10 > screenWidth
-          ? this.popoverPosition.set('left')
-          : this.popoverPosition.set('right');
+          ? this._popoverPosition.set('left')
+          : this._popoverPosition.set('right');
       }
     }
   }

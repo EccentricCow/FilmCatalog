@@ -7,7 +7,7 @@
   color: #fff;
   position: relative;
   background-color: rgba(38, 48, 56, 0.71);
-  z-index: 10;
+  z-index: 1000;
 
   &:before,
   &:after {
@@ -24,9 +24,9 @@
   }
 
   &:after {
-    color: #FF3D00;
+    color: #ff3d00;
     transform: rotateY(70deg);
-    animation-delay: .4s;
+    animation-delay: 0.4s;
   }
 }
 
@@ -51,27 +51,27 @@
 @keyframes spin {
   0%,
   100% {
-    box-shadow: .2em 0 0 0 currentcolor;
+    box-shadow: 0.2em 0 0 0 currentcolor;
   }
   12% {
-    box-shadow: .2em .2em 0 0 currentcolor;
+    box-shadow: 0.2em 0.2em 0 0 currentcolor;
   }
   25% {
-    box-shadow: 0 .2em 0 0 currentcolor;
+    box-shadow: 0 0.2em 0 0 currentcolor;
   }
   37% {
-    box-shadow: -.2em .2em 0 0 currentcolor;
+    box-shadow: -0.2em 0.2em 0 0 currentcolor;
   }
   50% {
-    box-shadow: -.2em 0 0 0 currentcolor;
+    box-shadow: -0.2em 0 0 0 currentcolor;
   }
   62% {
-    box-shadow: -.2em -.2em 0 0 currentcolor;
+    box-shadow: -0.2em -0.2em 0 0 currentcolor;
   }
   75% {
-    box-shadow: 0 -.2em 0 0 currentcolor;
+    box-shadow: 0 -0.2em 0 0 currentcolor;
   }
   87% {
-    box-shadow: .2em -.2em 0 0 currentcolor;
+    box-shadow: 0.2em -0.2em 0 0 currentcolor;
   }
 }

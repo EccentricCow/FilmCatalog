@@ -1,6 +1,6 @@
-import {Component, computed, input, output} from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {getPaginationArray} from '../../shared/utils/pagination-array.util';
+import { getPaginationArray } from '../../shared/utils/pagination-array.util';
 
 @Component({
   selector: 'pagination',
@@ -15,11 +15,17 @@ export class PaginationComponent {
 
   protected readonly _math = Math;
 
-  protected _paginationArray = computed<{nums: number[], leftBack: boolean, rightForward: boolean}>((): {nums: number[], leftBack: boolean, rightForward: boolean} => getPaginationArray(this.currentPage(), this.allPagesCount()));
+  protected _paginationArray = computed<{
+    nums: number[];
+    leftBack: boolean;
+    rightForward: boolean;
+  }>((): { nums: number[]; leftBack: boolean; rightForward: boolean } =>
+    getPaginationArray(this.currentPage(), this.allPagesCount())
+  );
 
   pageChange = output<number>();
 
-  onClick(page: number): void {
+  protected _onClick(page: number): void {
     if (page < 1 || page > this.allPagesCount()! || page === this.currentPage()) return;
     this.pageChange.emit(page);
   }

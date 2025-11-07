@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
+import { Films } from './views/films/films';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'films', pathMatch: 'full' },
   {
     path: 'films',
-    loadChildren: () => import('./views/films/films.routes').then((m) => m.FilmsRoutes),
+    component: Films,
   },
 ];

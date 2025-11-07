@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {inject, Injectable, makeStateKey, PLATFORM_ID, TransferState} from '@angular/core';
+import { inject, Injectable, makeStateKey, PLATFORM_ID, TransferState } from '@angular/core';
 import { environment } from '../../environments/environment';
-import {Observable, of, tap} from 'rxjs';
-import {FilmsResponseType, GenresResponseType} from '../../types/responses/films-response.type';
+import { Observable, of, tap } from 'rxjs';
+import { FilmsResponseType, GenresResponseType } from '../../types/responses/films-response.type';
 import { isPlatformServer } from '@angular/common';
 
 export const FILMS_KEY = makeStateKey<any>('films-page-1');
@@ -31,12 +31,13 @@ export class FilmsService {
       if (existing) return of(existing);
     }
 
-    return this._http.get<FilmsResponseType>(environment.tmdbApiUrl + '/movie/popular', {
-      headers: this._headers,
-      params: { page: page.toString(), language: 'ru-RU' },
-    })
+    return this._http
+      .get<FilmsResponseType>(environment.tmdbApiUrl + '/movie/popular', {
+        headers: this._headers,
+        params: { page: page.toString(), language: 'ru-RU' },
+      })
       .pipe(
-        tap(data => {
+        tap((data) => {
           if (isPlatformServer(this._platformId)) {
             if (page === 1) {
               this._transferState.set(FILMS_KEY, data);
@@ -50,23 +51,24 @@ export class FilmsService {
     const existing = this._transferState.get(GENRES_KEY, null);
     if (existing) return of(existing);
 
-    return this._http.get<GenresResponseType>(environment.tmdbApiUrl + '/genre/movie/list', {
-      headers: this._headers,
-      params: { language: 'ru-RU' },
-    })
+    return this._http
+      .get<GenresResponseType>(environment.tmdbApiUrl + '/genre/movie/list', {
+        headers: this._headers,
+        params: { language: 'ru-RU' },
+      })
       .pipe(
-        tap(data => {
+        tap((data) => {
           if (isPlatformServer(this._platformId)) {
             this._transferState.set(GENRES_KEY, data);
           }
         })
-    );
+      );
   }
 
   public searchFilms(search: string, page?: number): Observable<FilmsResponseType> {
     return this._http.get<FilmsResponseType>(environment.tmdbApiUrl + '/search/movie', {
       headers: this._headers,
-      params: {query: search, page: (page || 1).toString(), language: 'ru-RU' },
+      params: { query: search, page: (page || 1).toString(), language: 'ru-RU' },
     });
   }
 }

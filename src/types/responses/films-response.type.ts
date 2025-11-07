@@ -1,4 +1,4 @@
-import {Genre} from '../film.type';
+import { Genre } from '../film.type';
 
 export type FilmsResponseType = {
   page: number;
@@ -26,4 +26,4 @@ export type FilmResponseType = {
 
 export type GenresResponseType = {
   genres: Genre[];
-}
+};

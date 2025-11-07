@@ -17,6 +17,6 @@ export class FilmPopover {
   protected readonly _backdropPath = computed((): string =>
     this.film().backdrop_path
       ? environment.tmdbApiPosterBaseUrl + this.film().backdrop_path
-      : '/no-movie.png'
+      : '/no-movie-sm.png'
   );
 }

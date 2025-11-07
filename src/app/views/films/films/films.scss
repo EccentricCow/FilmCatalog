@@ -1,18 +1,5 @@
 .films {
-  //.film__header {
-  //    padding: 40px 20px;
-  //    display: flex;
-  //    justify-content: flex-end;
-  //
-  //    .header__search {
-  //      width: 400px;
-  //      box-sizing: border-box;
-  //      padding: 8px;
-  //      font-size: 24px;
-  //      border: 2px solid ;
-  //      border-radius: 8px;
-  //  }
-  //}
+  padding-bottom: 50px;
 
   .films__header {
     margin-bottom: 80px;
@@ -32,6 +19,12 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
+    justify-content: center;
+    margin-bottom: 50px;
+  }
+
+  .films__pagination {
+    display: flex;
     justify-content: center;
   }
 }

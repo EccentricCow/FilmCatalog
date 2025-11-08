@@ -44,7 +44,9 @@ export class FilmCard implements AfterViewInit {
     private readonly _el: ElementRef,
     @Inject(PLATFORM_ID) private readonly _platformId: Object,
     private readonly _filmPopoverService: FilmPopoverService
-  ) {}
+  ) {
+    afterNextRender(() => this._setPopoverPosition());
+  }
 
   public ngAfterViewInit(): void {
     if (isPlatformServer(this._platformId)) return;
@@ -52,19 +54,12 @@ export class FilmCard implements AfterViewInit {
     const mediaQuery = window.matchMedia('(min-width: 769px)');
     this.isDesktop.set(mediaQuery.matches);
 
-    mediaQuery.addEventListener('change', (e) => {
-      this.isDesktop.set(e.matches);
-      this._recalculatePosition();
-    });
-
-    afterNextRender(() => this._recalculatePosition());
+    mediaQuery.addEventListener('change', (e) => this.isDesktop.set(e.matches));
   }
 
-  private _recalculatePosition(): void {
-    const cardEl = this._el.nativeElement as HTMLDivElement;
-    const rect = cardEl.getBoundingClientRect();
+  private _setPopoverPosition(): void {
+    const rect = this._el.nativeElement.getBoundingClientRect(); 
     const screenWidth = window.innerWidth;
-
     const shouldBeLeft = rect.right + rect.width + 10 > screenWidth;
     this._popoverPosition.set(shouldBeLeft ? 'left' : 'right');
   }

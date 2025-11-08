@@ -6,7 +6,7 @@
 ![TMDB](https://img.shields.io/badge/TMDB%20API-Used-0d253f?logo=themoviedatabase&logoColor=white)
 
 📍 **Demo:**  
-👉 [film-catalog-angular-20-ssr-git-master-alexei10101s-projects.vercel.app](https://film-catalog-angular-20-ssr-git-master-alexei10101s-projects.vercel.app)
+👉 [film-catalog-angular-20-fy251qu5u-alexei10101s-projects.vercel.app](https://film-catalog-angular-20-fy251qu5u-alexei10101s-projects.vercel.app)
 
 ---
 

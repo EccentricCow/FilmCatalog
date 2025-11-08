@@ -1,59 +1,28 @@
-# FilmCatalog
+# 🎬 Film Catalog — Angular 20 + SSR + TMDB API
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.8.
+![Angular](https://img.shields.io/badge/Angular-20-DD0031?logo=angular&logoColor=white)
+![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+![TMDB](https://img.shields.io/badge/TMDB%20API-Used-0d253f?logo=themoviedatabase&logoColor=white)
 
-## Development server
+📍 **Demo:**  
+👉 [film-catalog-angular-20-ssr-git-master-alexei10101s-projects.vercel.app](https://film-catalog-angular-20-ssr-git-master-alexei10101s-projects.vercel.app)
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## 🚀 О проекте
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+**Film Catalog** — это приложение для просмотра фильмов, созданное на **Angular 20 с поддержкой SSR (Server-Side Rendering)**.  
+Приложение использует **[TMDB API](https://www.themoviedb.org/documentation/api)** для загрузки данных о популярных фильмах и позволяет искать и просматривать контент в интерактивном интерфейсе.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## ✨ Основной стек
 
-```bash
-ng generate component component-name
-```
+| Категория | Технологии |
+|------------|-------------|
+| **Frontend** | Angular 20, TypeScript, RxJS, Signals, SCSS |
+| **API** | TMDB (The Movie Database) |
+| **Деплой** | [Vercel](https://vercel.com/) |
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---

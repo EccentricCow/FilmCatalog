@@ -18,9 +18,9 @@
     </div>
     } @else {
     <div class="films__list">
-      @for (film of _filmsWithGenres(); track film.id) {
+      @for (film of _filmsWithGenres(); track film.id; let i = $index) {
       <div class="films__item">
-        <film-card [film]="film"></film-card>
+        <film-card [film]="film" [priority]="i < 4"></film-card>
       </div>
       }
     </div>
@@ -36,7 +36,7 @@
     }
   </div>
   } @else {
-    <div class="films__error">Упс, что-то пошло не так :(</div>
-    <div class="films__error">{{_isError()}}</div>
+  <div class="films__error">Упс, что-то пошло не так :(</div>
+  <div class="films__error">{{ _isError() }}</div>
   }
 </main>

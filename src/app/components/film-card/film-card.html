@@ -8,7 +8,14 @@
   @if (film()) {
   <div class="film-card__inner">
     <div class="film-card__poster">
-      <img [src]="_posterPath()" alt="{{ film().title }}-poster" loading="lazy" />
+      <img
+        [ngSrc]="_posterPath()"
+        alt="{{ film().title }}-poster"
+        fetchpriority="low"
+        fill
+        [priority]="priority()"
+        [loading]="priority() ? undefined : 'lazy'"
+      />
     </div>
     <div class="film-card__popover">
       @if (_isPopoverVisible()) {

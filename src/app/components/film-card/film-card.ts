@@ -10,24 +10,25 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { FilmPopoverService } from '../../services/film-popover.service';
 import { FilmPopover } from '../film-popover/film-popover';
-import { isPlatformServer } from '@angular/common';
+import { isPlatformServer, NgOptimizedImage } from '@angular/common';
 import { FilmType } from '../../../types/film.type';
+import { ImageService } from '../../services/img-size.service';
 
 @Component({
   selector: 'film-card',
-  imports: [FilmPopover],
+  imports: [FilmPopover, NgOptimizedImage],
   templateUrl: './film-card.html',
   styleUrl: './film-card.scss',
 })
 export class FilmCard implements AfterViewInit {
   public film = input.required<FilmType>();
+  public priority = input.required<boolean>();
 
   protected readonly _posterPath = computed((): string =>
     this.film().poster_path
-      ? environment.tmdbApiPosterBaseUrl + this.film().poster_path
+      ? this._imageService.getPosterUrl(this.film().poster_path)
       : '/no-movie.png'
   );
 
@@ -42,7 +43,8 @@ export class FilmCard implements AfterViewInit {
   constructor(
     private readonly _el: ElementRef,
     @Inject(PLATFORM_ID) private readonly _platformId: Object,
-    private readonly _filmPopoverService: FilmPopoverService
+    private readonly _filmPopoverService: FilmPopoverService,
+    private readonly _imageService: ImageService
   ) {
     afterNextRender(() => this._setPopoverPosition());
   }
@@ -57,7 +59,7 @@ export class FilmCard implements AfterViewInit {
   }
 
   private _setPopoverPosition(): void {
-    const rect = this._el.nativeElement.getBoundingClientRect(); 
+    const rect = this._el.nativeElement.getBoundingClientRect();
     const screenWidth = window.innerWidth;
     const shouldBeLeft = rect.right + rect.width + 10 > screenWidth;
     this._popoverPosition.set(shouldBeLeft ? 'left' : 'right');

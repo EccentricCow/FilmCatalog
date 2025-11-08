@@ -6,7 +6,6 @@ import {
   ElementRef,
   HostListener,
   Inject,
-  inject,
   input,
   PLATFORM_ID,
   signal,
@@ -32,7 +31,7 @@ export class FilmCard implements AfterViewInit {
       : '/no-movie.png'
   );
 
-  protected readonly isDesktop = signal(true);
+  private _isDesktop = signal(true);
   protected _popoverPosition = signal<'left' | 'right'>('right');
   protected _enterClass = signal('enter-animation');
 
@@ -52,9 +51,9 @@ export class FilmCard implements AfterViewInit {
     if (isPlatformServer(this._platformId)) return;
 
     const mediaQuery = window.matchMedia('(min-width: 769px)');
-    this.isDesktop.set(mediaQuery.matches);
+    this._isDesktop.set(mediaQuery.matches);
 
-    mediaQuery.addEventListener('change', (e) => this.isDesktop.set(e.matches));
+    mediaQuery.addEventListener('change', (e) => this._isDesktop.set(e.matches));
   }
 
   private _setPopoverPosition(): void {
@@ -65,19 +64,19 @@ export class FilmCard implements AfterViewInit {
   }
 
   protected _onMouseEnter(): void {
-    if (this.isDesktop()) {
+    if (this._isDesktop()) {
       this._filmPopoverService.setHoveredFilm(this.film().id);
     }
   }
 
   protected _onMouseLeave(): void {
-    if (this.isDesktop()) {
+    if (this._isDesktop()) {
       this._filmPopoverService.setHoveredFilm(null);
     }
   }
 
   protected _onClick(): void {
-    if (!this.isDesktop()) {
+    if (!this._isDesktop()) {
       const active = this._filmPopoverService.activeFilm() === this.film().id;
       this._filmPopoverService.setHoveredFilm(active ? null : this.film().id);
     }
@@ -85,7 +84,7 @@ export class FilmCard implements AfterViewInit {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
-    if (!this.isDesktop() && this._isPopoverVisible()) {
+    if (!this._isDesktop() && this._isPopoverVisible()) {
       const clickedInside = this._el.nativeElement.contains(event.target);
       if (!clickedInside) {
         this._filmPopoverService.setHoveredFilm(null);

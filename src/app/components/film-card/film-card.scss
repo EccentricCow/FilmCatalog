@@ -21,6 +21,23 @@
       object-fit: cover;
       filter: brightness(0.7);
       transition: filter 0.2s ease;
+      line-height: 1em;
+      text-indent: -9999px;
+    }
+
+    .alt-text {
+      position: absolute;
+      top: 5%;
+      left: 5%;
+      color: white;
+      font-size: 14px;
+      text-align: center;
+      width: 90%;
+      transition: opacity 0.2s;
+
+      &.hidden {
+        opacity: 0;
+      }
     }
   }
 
@@ -40,7 +57,7 @@
       position: relative;
       overflow: hidden;
       border-radius: 12px;
-      
+
       .film-card__poster {
         position: relative;
         border-radius: 12px;

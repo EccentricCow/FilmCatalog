@@ -9,13 +9,16 @@
   <div class="film-card__inner">
     <div class="film-card__poster">
       <img
-        [ngSrc]="_posterPath()"
-        alt="{{ film().title }}-poster"
+        [src]="_posterPath()"
+        [alt]="film().title"
         fetchpriority="low"
         fill
-        [priority]="priority()"
         [loading]="priority() ? undefined : 'lazy'"
+        (load)="_imageLoaded.set(true)"
       />
+      @if (!_imageLoaded()) {
+      <span class="alt-text" [class.hidden]="_imageLoaded()">{{ film().title }}</span>
+      }
     </div>
     <div class="film-card__popover">
       @if (_isPopoverVisible()) {

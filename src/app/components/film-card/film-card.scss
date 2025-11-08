@@ -39,7 +39,8 @@
     .film-card__inner {
       position: relative;
       overflow: hidden;
-
+      border-radius: 12px;
+      
       .film-card__poster {
         position: relative;
         border-radius: 12px;

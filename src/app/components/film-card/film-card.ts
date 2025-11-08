@@ -5,6 +5,7 @@ import {
   computed,
   ElementRef,
   HostListener,
+  Inject,
   inject,
   input,
   PLATFORM_ID,
@@ -31,10 +32,6 @@ export class FilmCard implements AfterViewInit {
       : '/no-movie.png'
   );
 
-  protected readonly _filmPopoverService = inject(FilmPopoverService);
-  private readonly _platformId = inject(PLATFORM_ID);
-  private readonly el = inject(ElementRef);
-
   protected readonly isDesktop = signal(true);
   protected _popoverPosition = signal<'left' | 'right'>('right');
   protected _enterClass = signal('enter-animation');
@@ -42,6 +39,12 @@ export class FilmCard implements AfterViewInit {
   protected readonly _isPopoverVisible = computed<boolean>((): boolean => {
     return this._filmPopoverService.activeFilm() === this.film().id;
   });
+
+  constructor(
+    private readonly _el: ElementRef,
+    @Inject(PLATFORM_ID) private readonly _platformId: Object,
+    private readonly _filmPopoverService: FilmPopoverService
+  ) {}
 
   public ngAfterViewInit(): void {
     if (isPlatformServer(this._platformId)) return;
@@ -57,8 +60,8 @@ export class FilmCard implements AfterViewInit {
     afterNextRender(() => this._recalculatePosition());
   }
 
-   private _recalculatePosition(): void {
-    const cardEl = this.el.nativeElement as HTMLDivElement;
+  private _recalculatePosition(): void {
+    const cardEl = this._el.nativeElement as HTMLDivElement;
     const rect = cardEl.getBoundingClientRect();
     const screenWidth = window.innerWidth;
 
@@ -88,7 +91,7 @@ export class FilmCard implements AfterViewInit {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     if (!this.isDesktop() && this._isPopoverVisible()) {
-      const clickedInside = this.el.nativeElement.contains(event.target);
+      const clickedInside = this._el.nativeElement.contains(event.target);
       if (!clickedInside) {
         this._filmPopoverService.setHoveredFilm(null);
       }

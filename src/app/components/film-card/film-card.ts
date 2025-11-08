@@ -1,4 +1,5 @@
 import {
+  afterNextRender,
   AfterViewInit,
   Component,
   computed,
@@ -30,45 +31,39 @@ export class FilmCard implements AfterViewInit {
       : '/no-movie.png'
   );
 
-  // popover logic
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    if (!this.isDesktop() && this._isPopoverVisible()) {
-      const clickedInside = this.el.nativeElement.contains(event.target);
-      if (!clickedInside) {
-        this._filmPopoverService.setHoveredFilm(null);
-      }
-    }
-  }
-
   protected readonly _filmPopoverService = inject(FilmPopoverService);
-  constructor(private el: ElementRef) {}
-  protected readonly isDesktop = signal(true);
+  private readonly _platformId = inject(PLATFORM_ID);
+  private readonly el = inject(ElementRef);
 
+  protected readonly isDesktop = signal(true);
   protected _popoverPosition = signal<'left' | 'right'>('right');
+  protected _enterClass = signal('enter-animation');
+
   protected readonly _isPopoverVisible = computed<boolean>((): boolean => {
     return this._filmPopoverService.activeFilm() === this.film().id;
   });
-  protected _enterClass = signal('enter-animation');
 
-  private readonly _platformId = inject(PLATFORM_ID);
   public ngAfterViewInit(): void {
-    if (!isPlatformServer(this._platformId)) {
-      const mediaQuery = window.matchMedia('(min-width: 769px)');
-      this.isDesktop.set(mediaQuery.matches);
+    if (isPlatformServer(this._platformId)) return;
 
-      mediaQuery.addEventListener('change', (e) => {
-        this.isDesktop.set(e.matches);
-      });
+    const mediaQuery = window.matchMedia('(min-width: 769px)');
+    this.isDesktop.set(mediaQuery.matches);
 
-      if (this.isDesktop()) {
-        const cardRect = (this.el.nativeElement as HTMLDivElement).getBoundingClientRect();
-        const screenWidth = window.innerWidth;
-        cardRect.right + cardRect.width + 10 > screenWidth
-          ? this._popoverPosition.set('left')
-          : this._popoverPosition.set('right');
-      }
-    }
+    mediaQuery.addEventListener('change', (e) => {
+      this.isDesktop.set(e.matches);
+      this._recalculatePosition();
+    });
+
+    afterNextRender(() => this._recalculatePosition());
+  }
+
+   private _recalculatePosition(): void {
+    const cardEl = this.el.nativeElement as HTMLDivElement;
+    const rect = cardEl.getBoundingClientRect();
+    const screenWidth = window.innerWidth;
+
+    const shouldBeLeft = rect.right + rect.width + 10 > screenWidth;
+    this._popoverPosition.set(shouldBeLeft ? 'left' : 'right');
   }
 
   protected _onMouseEnter(): void {
@@ -87,6 +82,16 @@ export class FilmCard implements AfterViewInit {
     if (!this.isDesktop()) {
       const active = this._filmPopoverService.activeFilm() === this.film().id;
       this._filmPopoverService.setHoveredFilm(active ? null : this.film().id);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    if (!this.isDesktop() && this._isPopoverVisible()) {
+      const clickedInside = this.el.nativeElement.contains(event.target);
+      if (!clickedInside) {
+        this._filmPopoverService.setHoveredFilm(null);
+      }
     }
   }
 }

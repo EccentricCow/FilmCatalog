@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, Inject, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { FilmsService } from '../../services/films.service';
 import {
   FilmsResponseType,
@@ -10,6 +10,7 @@ import { Loader } from '../../components/loader/loader';
 import { FilmType, Genre } from '../../../types/film.type';
 import { PaginationComponent } from '../../components/pagination/pagination';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { isPlatformServer } from '@angular/common';
 
 @Component({
   selector: 'app-films',
@@ -23,13 +24,16 @@ export class Films implements OnInit {
   protected _isLoading = signal<boolean>(false);
   protected _isError = signal<string>('');
   protected _films = signal<FilmsResponseType>({} as FilmsResponseType);
-  protected readonly _filmsPages = computed<{ total: number; current: number, totalResults: number }>(
-    (): { total: number; current: number, totalResults: number  } => ({
-      total: this._films().total_pages,
-      current: this._films().page,
-      totalResults: this._films().total_results
-    })
-  );
+
+  protected readonly _filmsPages = computed<{
+    total: number;
+    current: number;
+    totalResults: number;
+  }>((): { total: number; current: number; totalResults: number } => ({
+    total: this._films().total_pages,
+    current: this._films().page,
+    totalResults: this._films().total_results,
+  }));
   protected _genres = signal<Genre[]>([]);
   protected readonly _filmsWithGenres = computed((): FilmType[] =>
     this._films().results.map((film) => ({
@@ -41,6 +45,8 @@ export class Films implements OnInit {
   );
 
   protected _searchedField = new FormControl('');
+
+  constructor(@Inject(PLATFORM_ID) private readonly _platformId: Object) {}
 
   public ngOnInit(): void {
     this._fetchFilms(1);
@@ -85,6 +91,12 @@ export class Films implements OnInit {
     this._isLoading.set(true);
 
     const search = this._searchedField.value;
+
+    if (isPlatformServer(this._platformId)) {
+      this._films.set({ results: [], page: 1, total_pages: 0, total_results: 0 });
+      return;
+    }
+
     const films$ = search?.trim()
       ? this._filmsService.searchFilms(search, page)
       : this._filmsService.getFilms(page);

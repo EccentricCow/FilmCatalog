@@ -25,16 +25,16 @@ export class Films implements OnInit {
   protected _isError = signal<string>('');
   protected _films = signal<FilmsResponseType>({} as FilmsResponseType);
 
-  protected readonly _filmsPages = computed<{
-    total: number;
-    current: number;
-    totalResults: number;
-  }>((): { total: number; current: number; totalResults: number } => ({
-    total: this._films().total_pages,
-    current: this._films().page,
-    totalResults: this._films().total_results,
-  }));
-  protected _genres = signal<Genre[]>([]);
+  protected readonly _filmsPages = computed<FilmsPagesViewModel>(
+    (): FilmsPagesViewModel => ({
+      total: this._films().total_pages,
+      current: this._films().page,
+      totalResults: this._films().total_results,
+    })
+  );
+
+  protected _searchedField = new FormControl('');
+
   protected readonly _filmsWithGenres = computed((): FilmType[] =>
     this._films().results.map((film) => ({
       ...film,

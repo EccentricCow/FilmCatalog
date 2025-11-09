@@ -16,6 +16,12 @@ export type FilmType = {
   genres?: Genre['name'][];
 };
 
+export type FilmsPagesViewModel = {
+  current: number;
+  total: number;
+  totalResults: number;
+};
+
 export type Genre = {
   id: string;
   name: string;

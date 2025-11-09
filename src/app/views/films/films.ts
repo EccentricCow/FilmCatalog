@@ -50,14 +50,14 @@ export class Films implements OnInit, AfterViewInit {
 
   protected _searchedField = new FormControl('');
 
-  protected readonly _filmsWithGenres = computed((): FilmType[] =>
-    this._films().results?.map((film) => ({
+  protected readonly _filmsWithGenres = computed(() => {
+    const films = this._films()?.results ?? [];
+    const genresMap = new Map((this._genres() ?? [])?.map((g) => [g.id, g.name]));
+    return films.map((film) => ({
       ...film,
-      genres: film.genre_ids?.map(
-        (id) => (this._genres() ?? []).find((g) => g.id === id)?.name ?? ''
-      ),
-    }))
-  );
+      genres: film.genre_ids?.map((id) => genresMap.get(id) ?? '') ?? [],
+    }));
+  });
 
   public ngOnInit(): void {
     this._fetchFilms();

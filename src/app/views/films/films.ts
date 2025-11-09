@@ -16,7 +16,7 @@ import {
 import { FilmCard } from '../../components/film-card/film-card';
 import { debounceTime, finalize, tap } from 'rxjs';
 import { Loader } from '../../components/loader/loader';
-import { FilmsPagesViewModel, FilmType, Genre } from '../../../types/film.type';
+import { Genre } from '../../../types/film.type';
 import { PaginationComponent } from '../../components/pagination/pagination';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { isPlatformServer } from '@angular/common';
@@ -33,7 +33,7 @@ export class Films implements OnInit, AfterViewInit {
   private readonly _filmsService = inject(FilmsService);
   private readonly _destroyRef = inject(DestroyRef);
 
-  protected _hasHydrated = signal<boolean>(false);
+  private _isFirstClientFetchDone = false;
 
   protected _isLoading = signal<boolean>(false);
   protected _isError = signal<string>('');
@@ -43,8 +43,6 @@ export class Films implements OnInit, AfterViewInit {
   protected _genres = signal<Genre[]>([]);
 
   protected readonly _filmsPages = computed(() => {
-    if (isPlatformServer(this._platformId)) return {} as FilmsPagesViewModel;
-
     return {
       total: this._films().total_pages,
       current: this._films().page,
@@ -64,7 +62,8 @@ export class Films implements OnInit, AfterViewInit {
   });
 
   public ngOnInit(): void {
-    this._fetchFilms();
+    const skipUiEffects = !isPlatformServer(this._platformId) && !this._isFirstClientFetchDone;
+    this._fetchFilms(1, skipUiEffects);
   }
 
   public ngAfterViewInit(): void {
@@ -92,7 +91,7 @@ export class Films implements OnInit, AfterViewInit {
     this._fetchFilms(page);
   }
 
-  private _fetchFilms(page: number = 1): void {
+  private _fetchFilms(page: number = 1, skipUiEffects: boolean = false): void {
     this._isError.set('');
 
     if (isPlatformServer(this._platformId)) {
@@ -110,9 +109,9 @@ export class Films implements OnInit, AfterViewInit {
       return;
     }
 
-    this._isLoading.set(true);
+    if (!skipUiEffects) this._isLoading.set(true);
 
-    const search = this._searchedField.value;
+    const search = this._searchedField?.value;
     const films$ = search?.trim()
       ? this._filmsService.searchFilms(search, page)
       : this._filmsService.getFilms(page);
@@ -120,8 +119,13 @@ export class Films implements OnInit, AfterViewInit {
     films$
       .pipe(
         finalize(() => {
-          if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
-          this._isLoading.set(false);
+          if (!skipUiEffects && typeof window !== 'undefined') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+          if (!skipUiEffects) {
+            this._isLoading.set(false);
+            this._isFirstClientFetchDone = true;
+          }
         }),
         takeUntilDestroyed(this._destroyRef)
       )

@@ -7,6 +7,7 @@ import {
   HostListener,
   Inject,
   input,
+  OnInit,
   PLATFORM_ID,
   signal,
 } from '@angular/core';
@@ -22,15 +23,19 @@ import { ImageService } from '../../services/img-size.service';
   templateUrl: './film-card.html',
   styleUrl: './film-card.scss',
 })
-export class FilmCard implements AfterViewInit {
+export class FilmCard implements AfterViewInit, OnInit {
   public film = input.required<FilmType>();
   public priority = input.required<boolean>();
 
-  protected readonly _posterPath = computed((): string =>
-    this.film().poster_path
-      ? this._imageService.getPosterUrl(this.film().poster_path)
-      : '/no-movie.png'
-  );
+  protected readonly _posterPath = computed((): string => {
+    if (!this.film().poster_path) return '/no-movie.png';
+
+    if (this._hasHydrated()) {
+      return this._imageService.getPosterUrl(this.film().poster_path);
+    }
+
+    return '';
+  });
 
   private _isDesktop = signal(true);
   protected _popoverPosition = signal<'left' | 'right'>('right');
@@ -40,6 +45,9 @@ export class FilmCard implements AfterViewInit {
     return this._filmPopoverService.activeFilm() === this.film().id;
   });
 
+  private _hasHydrated = signal<boolean>(false);
+  protected _imageLoaded = signal<boolean>(false);
+
   constructor(
     private readonly _el: ElementRef,
     @Inject(PLATFORM_ID) private readonly _platformId: Object,
@@ -47,6 +55,12 @@ export class FilmCard implements AfterViewInit {
     private readonly _imageService: ImageService
   ) {
     afterNextRender(() => this._setPopoverPosition());
+  }
+
+  public ngOnInit(): void {
+    if (!isPlatformServer(this._platformId)) {
+      this._hasHydrated.set(true);
+    }
   }
 
   public ngAfterViewInit(): void {

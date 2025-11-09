@@ -9,10 +9,10 @@
   <div class="film-card__inner">
     <div class="film-card__poster">
       <img
-        [src]="_posterPath()"
+        [ngSrc]="_posterPath()"
         [alt]="film().title"
-        fetchpriority="low"
         fill
+        [priority]="priority()"
         [loading]="priority() ? undefined : 'lazy'"
         (load)="_imageLoaded.set(true)"
       />

@@ -37,22 +37,26 @@ export class Films implements OnInit, AfterViewInit {
 
   protected _isLoading = signal<boolean>(false);
   protected _isError = signal<string>('');
+  protected _searchedField = new FormControl('');
+
   protected _films = signal<FilmsResponseType>({} as FilmsResponseType);
   protected _genres = signal<Genre[]>([]);
 
-  protected readonly _filmsPages = computed<FilmsPagesViewModel>(
-    (): FilmsPagesViewModel => ({
+  protected readonly _filmsPages = computed(() => {
+    if (isPlatformServer(this._platformId)) return {} as FilmsPagesViewModel;
+
+    return {
       total: this._films().total_pages,
       current: this._films().page,
       totalResults: this._films().total_results,
-    })
-  );
-
-  protected _searchedField = new FormControl('');
+    };
+  });
 
   protected readonly _filmsWithGenres = computed(() => {
+    if (isPlatformServer(this._platformId)) return this._films().results?.slice(0, 10);
+
     const films = this._films()?.results ?? [];
-    const genresMap = new Map((this._genres() ?? [])?.map((g) => [g.id, g.name]));
+    const genresMap = new Map(this._genres().map((g) => [g.id, g.name]));
     return films.map((film) => ({
       ...film,
       genres: film.genre_ids?.map((id) => genresMap.get(id) ?? '') ?? [],
@@ -61,12 +65,11 @@ export class Films implements OnInit, AfterViewInit {
 
   public ngOnInit(): void {
     this._fetchFilms();
-    this._fetchGenres();
   }
 
   public ngAfterViewInit(): void {
     if (!isPlatformServer(this._platformId)) {
-      this._hasHydrated.set(true);
+      this._fetchGenres();
       this._initSearchListener();
     }
   }

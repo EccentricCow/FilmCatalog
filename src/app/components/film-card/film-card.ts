@@ -46,7 +46,7 @@ export class FilmCard implements AfterViewInit, OnInit {
   });
 
   private _hasHydrated = signal<boolean>(false);
-  protected _imageLoaded = signal<boolean>(false);
+  protected _isImageLoaded = signal<boolean>(false);
 
   constructor(
     private readonly _el: ElementRef,

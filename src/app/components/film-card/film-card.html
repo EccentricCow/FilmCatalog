@@ -8,17 +8,20 @@
   @if (film()) {
   <div class="film-card__inner">
     <div class="film-card__poster">
+      <div class="film-card__bg animations" [style.display]="_isImageLoaded() ? 'none' : 'block'">
+        <span class="film-card__alt-text">{{ film().title }}</span>
+      </div>
       <img
         [ngSrc]="_posterPath()"
         [alt]="film().title"
         fill
+        fetchpriority="auto"
+        class="animations"
+        [style.opacity]="_isImageLoaded() ? '1' : '0'"
         [priority]="priority()"
         [loading]="priority() ? undefined : 'lazy'"
-        (load)="_imageLoaded.set(true)"
+        (load)="_isImageLoaded.set(true)"
       />
-      @if (!_imageLoaded()) {
-      <span class="alt-text" [class.hidden]="_imageLoaded()">{{ film().title }}</span>
-      }
     </div>
     <div class="film-card__popover">
       @if (_isPopoverVisible()) {

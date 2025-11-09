@@ -1,13 +1,11 @@
 <main class="films">
   @if (!_isError()) {
   <header class="films__header">
-    <input
-      [formControl]="_searchedField"
-      class="films__search"
-      type="text"
-      placeholder="Поиск..."
-      name="search"
-    />
+    @defer(hydrate on hover) {
+    <search-input (search)="_loadNewPage(1, $event)"></search-input>
+    } @placeholder {
+    <input type="text" class="films__search" placeholder="Поиск" />
+    }
   </header>
 
   <div class="container">
@@ -26,12 +24,18 @@
     </div>
 
     <div class="films__pagination">
+      @defer (hydrate on hover) {
       <pagination
         [allPagesCount]="_filmsPages().total"
         [currentPage]="_filmsPages().current"
         [totalResults]="_filmsPages().totalResults"
         (pageChange)="_loadNewPage($event)"
       ></pagination>
+      } @placeholder {
+      <div>pagination</div>
+      } @loading {
+      <loader></loader>
+      }
     </div>
     }
   </div>

@@ -14,17 +14,17 @@ import {
   GenresResponseType,
 } from '../../../types/responses/films-response.type';
 import { FilmCard } from '../../components/film-card/film-card';
-import { debounceTime, finalize, tap } from 'rxjs';
+import { finalize } from 'rxjs';
 import { Loader } from '../../components/loader/loader';
 import { Genre } from '../../../types/film.type';
 import { PaginationComponent } from '../../components/pagination/pagination';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { isPlatformServer } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SearchInput } from '../../components/search-input/search-input';
 
 @Component({
   selector: 'app-films',
-  imports: [FilmCard, Loader, PaginationComponent, ReactiveFormsModule],
+  imports: [FilmCard, Loader, PaginationComponent, SearchInput],
   templateUrl: './films.html',
   styleUrl: './films.scss',
 })
@@ -37,7 +37,6 @@ export class Films implements OnInit, AfterViewInit {
 
   protected _isLoading = signal<boolean>(false);
   protected _isError = signal<string>('');
-  protected _searchedField = new FormControl('');
 
   protected _films = signal<FilmsResponseType>({} as FilmsResponseType);
   protected _genres = signal<Genre[]>([]);
@@ -63,13 +62,12 @@ export class Films implements OnInit, AfterViewInit {
 
   public ngOnInit(): void {
     const skipUiEffects = !isPlatformServer(this._platformId) && !this._isFirstClientFetchDone;
-    this._fetchFilms(1, skipUiEffects);
+    this._fetchFilms(1, '', skipUiEffects);
   }
 
   public ngAfterViewInit(): void {
     if (!isPlatformServer(this._platformId)) {
       this._fetchGenres();
-      this._initSearchListener();
     }
   }
 
@@ -87,11 +85,11 @@ export class Films implements OnInit, AfterViewInit {
       });
   }
 
-  protected _loadNewPage(page: number): void {
-    this._fetchFilms(page);
+  protected _loadNewPage(page: number, search?: string): void {
+    this._fetchFilms(page, search);
   }
 
-  private _fetchFilms(page: number = 1, skipUiEffects: boolean = false): void {
+  private _fetchFilms(page: number = 1, search: string = '', skipUiEffects: boolean = false): void {
     this._isError.set('');
 
     if (isPlatformServer(this._platformId)) {
@@ -111,8 +109,7 @@ export class Films implements OnInit, AfterViewInit {
 
     if (!skipUiEffects) this._isLoading.set(true);
 
-    const search = this._searchedField?.value;
-    const films$ = search?.trim()
+    const films$ = search.trim()
       ? this._filmsService.searchFilms(search, page)
       : this._filmsService.getFilms(page);
 
@@ -143,15 +140,5 @@ export class Films implements OnInit, AfterViewInit {
           console.error('Error loading films', err);
         },
       });
-  }
-
-  private _initSearchListener(): void {
-    this._searchedField.valueChanges
-      .pipe(
-        debounceTime(500),
-        tap(() => this._fetchFilms()),
-        takeUntilDestroyed(this._destroyRef)
-      )
-      .subscribe();
   }
 }

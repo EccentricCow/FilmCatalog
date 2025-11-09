@@ -24,7 +24,7 @@ export class PaginationComponent {
     getPaginationArray(this.currentPage(), this.allPagesCount())
   );
 
-  pageChange = output<number>();
+  public pageChange = output<number>();
 
   protected _onClick(page: number): void {
     if (page < 1 || page > this.allPagesCount()! || page === this.currentPage()) return;

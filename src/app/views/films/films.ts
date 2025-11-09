@@ -1,16 +1,26 @@
-import { Component, computed, Inject, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  OnInit,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
 import { FilmsService } from '../../services/films.service';
 import {
   FilmsResponseType,
   GenresResponseType,
 } from '../../../types/responses/films-response.type';
 import { FilmCard } from '../../components/film-card/film-card';
-import { debounceTime, finalize, map, Observable, of, startWith, switchMap } from 'rxjs';
+import { debounceTime, finalize, tap } from 'rxjs';
 import { Loader } from '../../components/loader/loader';
-import { FilmType, Genre } from '../../../types/film.type';
+import { FilmsPagesViewModel, FilmType, Genre } from '../../../types/film.type';
 import { PaginationComponent } from '../../components/pagination/pagination';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { isPlatformServer } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-films',
@@ -18,12 +28,17 @@ import { isPlatformServer } from '@angular/common';
   templateUrl: './films.html',
   styleUrl: './films.scss',
 })
-export class Films implements OnInit {
+export class Films implements OnInit, AfterViewInit {
+  private readonly _platformId = inject(PLATFORM_ID);
   private readonly _filmsService = inject(FilmsService);
+  private readonly _destroyRef = inject(DestroyRef);
+
+  protected _hasHydrated = signal<boolean>(false);
 
   protected _isLoading = signal<boolean>(false);
   protected _isError = signal<string>('');
   protected _films = signal<FilmsResponseType>({} as FilmsResponseType);
+  protected _genres = signal<Genre[]>([]);
 
   protected readonly _filmsPages = computed<FilmsPagesViewModel>(
     (): FilmsPagesViewModel => ({
@@ -36,50 +51,37 @@ export class Films implements OnInit {
   protected _searchedField = new FormControl('');
 
   protected readonly _filmsWithGenres = computed((): FilmType[] =>
-    this._films().results.map((film) => ({
+    this._films().results?.map((film) => ({
       ...film,
-      genres: film.genre_ids.map(
+      genres: film.genre_ids?.map(
         (id) => (this._genres() ?? []).find((g) => g.id === id)?.name ?? ''
       ),
     }))
   );
 
-  protected _searchedField = new FormControl('');
-
-  constructor(@Inject(PLATFORM_ID) private readonly _platformId: Object) {}
-
   public ngOnInit(): void {
-    this._fetchFilms(1);
+    this._fetchFilms();
+    this._fetchGenres();
+  }
 
-    this._filmsService.getGenres().subscribe({
-      next: (genresResponse: GenresResponseType): void => {
-        if (genresResponse?.genres.length > 0) {
-          this._genres.set(genresResponse.genres);
-        }
-      },
-      error: (err): void => {
-        console.error('Error loading genres: ', err);
-      },
-    });
+  public ngAfterViewInit(): void {
+    if (!isPlatformServer(this._platformId)) {
+      this._hasHydrated.set(true);
+      this._initSearchListener();
+    }
+  }
 
-    this._searchedField.valueChanges
-      .pipe(
-        startWith(''),
-        debounceTime(500),
-        map((search) => search ?? ''),
-        switchMap((search: string): Observable<FilmsResponseType | null> => {
-          if (search.trim()) {
-            this._fetchFilms(1);
-          }
-          return of(null);
-        })
-      )
+  private _fetchGenres() {
+    this._filmsService
+      .getGenres()
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe({
-        next: (): void => {
-          if (!this._searchedField.value) {
-            this._fetchFilms(1);
+        next: (genresResponse: GenresResponseType): void => {
+          if (genresResponse?.genres.length > 0) {
+            this._genres.set(genresResponse.genres);
           }
         },
+        error: (err): void => console.error('Error loading genres: ', err),
       });
   }
 
@@ -87,33 +89,62 @@ export class Films implements OnInit {
     this._fetchFilms(page);
   }
 
-  private _fetchFilms(page: number): void {
-    this._isLoading.set(true);
-
-    const search = this._searchedField.value;
+  private _fetchFilms(page: number = 1): void {
+    this._isError.set('');
 
     if (isPlatformServer(this._platformId)) {
-      this._films.set({ results: [], page: 1, total_pages: 0, total_results: 0 });
+      this._filmsService.getFilms(1).subscribe({
+        next: (filmsResponse: FilmsResponseType) => {
+          if (filmsResponse) {
+            this._films.set({
+              ...filmsResponse,
+              total_pages: Math.min(filmsResponse.total_pages, 100),
+            });
+          }
+        },
+        error: (err) => console.error('Error loading films', err),
+      });
       return;
     }
 
+    this._isLoading.set(true);
+
+    const search = this._searchedField.value;
     const films$ = search?.trim()
       ? this._filmsService.searchFilms(search, page)
       : this._filmsService.getFilms(page);
 
-    films$.pipe(finalize((): void => this._isLoading.set(false))).subscribe({
-      next: (filmsResponse: FilmsResponseType): void => {
-        if (filmsResponse) {
-          this._films.set({
-            ...filmsResponse,
-            total_pages: Math.min(filmsResponse.total_pages, 100),
-          });
-        }
-      },
-      error: (err): void => {
-        this._isError.set(err.message);
-        console.error('Error loading films', err);
-      },
-    });
+    films$
+      .pipe(
+        finalize(() => {
+          if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
+          this._isLoading.set(false);
+        }),
+        takeUntilDestroyed(this._destroyRef)
+      )
+      .subscribe({
+        next: (filmsResponse: FilmsResponseType) => {
+          if (filmsResponse) {
+            this._films.set({
+              ...filmsResponse,
+              total_pages: Math.min(filmsResponse.total_pages, 100),
+            });
+          }
+        },
+        error: (err) => {
+          this._isError.set(err.message);
+          console.error('Error loading films', err);
+        },
+      });
+  }
+
+  private _initSearchListener(): void {
+    this._searchedField.valueChanges
+      .pipe(
+        debounceTime(500),
+        tap(() => this._fetchFilms()),
+        takeUntilDestroyed(this._destroyRef)
+      )
+      .subscribe();
   }
 }

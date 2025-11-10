@@ -90,6 +90,8 @@
         z-index: 10;
         pointer-events: none;
         transition: transform 0.3s ease;
+        background-color: #fff;
+        border-radius: 12px;
       }
     }
 
@@ -103,6 +105,7 @@
         .film-card__popover {
           transform: translateX(100%);
           pointer-events: unset;
+          background-color: #fff;
         }
       }
     }

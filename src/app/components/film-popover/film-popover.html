@@ -5,9 +5,7 @@
     <div class="film-card__popover-img">
       @if (_isLoading()) {
       <div class="film-card__popover-loader">
-        <loader
-          [style.color]="'rgba(38,48,56,0.71)'"
-        ></loader>
+        <loader [style.color]="'rgba(38,48,56,0.71)'"></loader>
       </div>
       }
       <img
@@ -25,11 +23,13 @@
     </div>
   </div>
 
+  @if (film().genres) {
   <div class="film-card__popover-genres">
     @for (genre of film().genres; track $index) {
     <div class="film-card__popover-genre">{{ genre }}</div>
     }
   </div>
+  }
 
   <div class="film-card__popover-extra">
     <p class="film-card__popover-year">{{ film().release_date.split('-')[0] || '—' }}</p>

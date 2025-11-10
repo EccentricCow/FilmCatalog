@@ -13,18 +13,18 @@
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
     transition: transform 0.3s ease, box-shadow 0.2s ease;
-    aspect-ratio: 2 / 3;
+    width: 100%;
+    padding-top: 150%;
 
     img {
-      min-height: min-content;
-      transition-duration: 500ms;
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
       filter: brightness(0.7);
       transition: filter 0.2s ease, opacity 0.4s ease-in-out;
-      line-height: 1em;
-      text-indent: -9999px;
     }
 
     .film-card__bg {
@@ -34,7 +34,6 @@
       position: absolute;
       inset: 0;
       text-align: center;
-      // animation: ;
 
       .film-card__alt-text {
         color: white;

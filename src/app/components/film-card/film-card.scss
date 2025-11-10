@@ -57,9 +57,9 @@
   .film-card {
     .film-card__inner {
       position: relative;
-      overflow-x: hidden;
-      overflow-y: scroll;
+      overflow: hidden;
       border-radius: 12px;
+      height: 100%;
 
       .film-card__poster {
         position: relative;
@@ -82,6 +82,7 @@
 
       .film-card__popover {
         position: absolute;
+        overflow-y: scroll;
         top: 0;
         left: -100%;
         width: 100%;

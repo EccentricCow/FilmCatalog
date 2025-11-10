@@ -1,11 +1,7 @@
 <main class="films">
   @if (!_isError()) {
   <header class="films__header">
-    @defer(hydrate on hover) {
     <search-input (search)="_loadNewPage(1, $event)"></search-input>
-    } @placeholder {
-    <input type="text" class="films__search" placeholder="Поиск" />
-    }
   </header>
 
   <div class="container">

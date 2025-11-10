@@ -32,9 +32,8 @@ export class FilmsService {
     }
 
     return this._http
-      .get<FilmsResponseType>(environment.tmdbApiUrl + '/movie/popular', {
-        headers: this._headers,
-        params: { page: page.toString(), language: 'ru-RU' },
+      .get<FilmsResponseType>('/api/movies', {
+        params: { page: page.toString() },
       })
       .pipe(
         tap((data) => {
@@ -51,24 +50,18 @@ export class FilmsService {
     const existing = this._transferState.get(GENRES_KEY, null);
     if (existing) return of(existing);
 
-    return this._http
-      .get<GenresResponseType>(environment.tmdbApiUrl + '/genre/movie/list', {
-        headers: this._headers,
-        params: { language: 'ru-RU' },
+    return this._http.get<GenresResponseType>('/api/genres').pipe(
+      tap((data) => {
+        if (isPlatformServer(this._platformId)) {
+          this._transferState.set(GENRES_KEY, data);
+        }
       })
-      .pipe(
-        tap((data) => {
-          if (isPlatformServer(this._platformId)) {
-            this._transferState.set(GENRES_KEY, data);
-          }
-        })
-      );
+    );
   }
 
   public searchFilms(search: string, page?: number): Observable<FilmsResponseType> {
-    return this._http.get<FilmsResponseType>(environment.tmdbApiUrl + '/search/movie', {
-      headers: this._headers,
-      params: { query: search, page: (page || 1).toString(), language: 'ru-RU' },
+    return this._http.get<FilmsResponseType>('/api/search', {
+      params: { query: search, page: (page || 1).toString() },
     });
   }
 }

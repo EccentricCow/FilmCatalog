@@ -27,15 +27,13 @@ export class FilmCard implements AfterViewInit, OnInit {
   public film = input.required<FilmType>();
   public priority = input.required<boolean>();
 
-  protected readonly _posterPath = computed((): string => {
-    if (!this.film().poster_path) return '/no-movie.webp';
-
-    if (this._hasHydrated()) {
-      return this._imageService.getPosterUrl(this.film().poster_path);
-    }
-
-    return '';
-  });
+  protected readonly _posterPath = computed((): string =>
+    this.film().poster_path
+      ? `/api/image-proxy?url=${encodeURIComponent(
+          this._imageService.getPosterUrl(this.film().poster_path)
+        )}`
+      : '/no-movie.png'
+  );
 
   private _isDesktop = signal(true);
   protected _popoverPosition = signal<'left' | 'right'>('right');

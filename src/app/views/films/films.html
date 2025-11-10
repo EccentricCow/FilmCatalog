@@ -18,9 +18,8 @@
       </div>
       }
     </div>
-
     <div class="films__pagination">
-      @defer (hydrate on hover) {
+      @if (_filmsPages().total > 1) { @defer (hydrate on hover) {
       <pagination
         [allPagesCount]="_filmsPages().total"
         [currentPage]="_filmsPages().current"
@@ -29,14 +28,12 @@
       ></pagination>
       } @placeholder {
       <div>pagination</div>
-      } @loading {
-      <loader></loader>
-      }
+      }}
     </div>
     }
   </div>
   } @else {
-  <div class="films__error">Упс, что-то пошло не так :(</div>
-  <div class="films__error">{{ _isError() }}</div>
+  <span class="films__error">Упс, что-то пошло не так :(</span>
+  <span class="films__error">{{ _isError() }}</span>
   }
 </main>

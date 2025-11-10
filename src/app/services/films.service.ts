@@ -16,15 +16,6 @@ export class FilmsService {
   private readonly _transferState = inject(TransferState);
   private readonly _platformId = inject(PLATFORM_ID);
 
-  private readonly _apiKey = isPlatformServer(this._platformId)
-    ? process.env['TMDB_API_KEY'] || environment.tmdbApiKey
-    : environment.tmdbApiKey;
-
-  private readonly _headers = new HttpHeaders({
-    Authorization: `Bearer ${this._apiKey}`,
-    'Content-Type': 'application/json',
-  });
-
   public getFilms(page: number): Observable<FilmsResponseType> {
     if (page === 1) {
       const existing = this._transferState.get(FILMS_KEY, null);

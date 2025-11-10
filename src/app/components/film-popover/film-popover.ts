@@ -21,6 +21,6 @@ export class FilmPopover {
   protected readonly _backdropPath = computed((): string =>
     this.film().backdrop_path
       ? this._imageService.getBackdropUrl(this.film().backdrop_path)
-      : '/no-movie-sm.png'
+      : '/no-movie-sm.webp'
   );
 }

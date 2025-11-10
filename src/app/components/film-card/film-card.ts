@@ -28,7 +28,7 @@ export class FilmCard implements AfterViewInit, OnInit {
   public priority = input.required<boolean>();
 
   protected readonly _posterPath = computed((): string => {
-    if (!this.film().poster_path) return '/no-movie.png';
+    if (!this.film().poster_path) return '/no-movie.webp';
 
     if (this._hasHydrated()) {
       return this._imageService.getPosterUrl(this.film().poster_path);

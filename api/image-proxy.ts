@@ -18,8 +18,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.setHeader('Content-Type', response.headers.get('content-type') || 'image/jpeg');
     res.setHeader('Cache-Control', 'public, max-age=86400');
     res.send(Buffer.from(arrayBuffer));
+    return res.send(Buffer.from(arrayBuffer));
   } catch (err) {
     console.error('Image fetch error:', err);
     res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 }
